@@ -34,7 +34,7 @@ public class Main {
         Future<String> future = executor.submit(resultTask);
 
         try {
-            String result = future.get(); // Espera i recull el resultat de la tasca Callable
+            String result = future.get(); 
             System.out.println(result);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
