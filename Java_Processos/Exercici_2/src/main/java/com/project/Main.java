@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 public class Main {
     public static void main(String[] args) {
         CompletableFuture<Void> future = CompletableFuture
-            // Primera tasca: validació de dades (supplyAsync)
+            // Primera tasca: validació de dades 
             .supplyAsync(() -> {
                 System.out.println("Validant sol·licitud...");
                 try { Thread.sleep(500); } catch (InterruptedException e) {}
@@ -13,7 +13,7 @@ public class Main {
                 System.out.println("Dades validades: " + valorInicial);
                 return valorInicial;
             })
-            // Segona tasca: processar dades (thenApply)
+            // Segona tasca: processar dades 
             .thenApply(dades -> {
                 System.out.println("Processant dades...");
                 try { Thread.sleep(500); } catch (InterruptedException e) {}
@@ -21,12 +21,11 @@ public class Main {
                 System.out.println("Resultat calculat: " + resultat);
                 return resultat;
             })
-            // Tercera tasca: mostrar resultat (thenAccept)
+            // Tercera tasca: mostrar resultat 
             .thenAccept(resultatFinal -> {
                 System.out.println("Resposta a l'usuari: El resultat final és " + resultatFinal);
             });
 
-        // Esperar que totes les operacions asíncrones acabin
         future.join();
     }
 }

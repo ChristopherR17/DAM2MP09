@@ -5,29 +5,30 @@ import java.util.concurrent.*;
 public class Main {
     public static void main(String[] args) {
         ConcurrentHashMap<String, Double> bankData = new ConcurrentHashMap<>();
-        
         ExecutorService executor = Executors.newFixedThreadPool(3);
+        CountDownLatch latch = new CountDownLatch(1);
 
-        // Tasca 1: Introduir dades inicials (simula recepció operació bancària)
+        // Tasca 1: Iniciar
         Runnable initTask = () -> {
             bankData.put("saldo", 1000.0);
-            System.out.println("Dades inicials introduïdes: saldo = 1000.0");
+            System.out.println("Dades inicials introduïdes: saldo = " + bankData.get("saldo"));
+            latch.countDown();
         };
 
-        // Tasca 2: Modificar dades (simula càlcul d'interessos/comissions)
-            Runnable modifyTask = () -> {
-                bankData.computeIfPresent("saldo", (k, v) -> v * 1.05 - 10);
-                System.out.println("Dades modificades: saldo actualitzat");
-            };
+        // Tasca 2: Modificar 
+        Runnable modifyTask = () -> {
+            try { latch.await(); } catch (InterruptedException e) {}
+            bankData.computeIfPresent("saldo", (k, v) -> v * 1.05 - 10); 
+            System.out.println("Dades modificades: saldo actualitzat");
+        };
 
-        // Tasca 3: Llegir dades modificades i retornar resultat final
+        // Tasca 3: Llegir 
         Callable<String> resultTask = () -> {
-            try { Thread.sleep(1000); } catch (InterruptedException e) {}
+            try { latch.await(); } catch (InterruptedException e) {}
             Double saldo = bankData.get("saldo");
             return "Resultat final per al client: saldo = " + saldo;
         };
 
-        // Executar les tasques
         executor.execute(initTask);
         executor.execute(modifyTask);
         Future<String> future = executor.submit(resultTask);
