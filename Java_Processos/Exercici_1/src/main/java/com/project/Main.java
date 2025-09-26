@@ -15,11 +15,10 @@ public class Main {
         };
 
         // Tasca 2: Modificar dades (simula càlcul d'interessos/comissions)
-        Runnable modifyTask = () -> {
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
-            bankData.computeIfPresent("saldo", (k, v) -> v * 1.05 - 10); // +5% interès, -10 comissió
-            System.out.println("Dades modificades: saldo actualitzat");
-        };
+            Runnable modifyTask = () -> {
+                bankData.computeIfPresent("saldo", (k, v) -> v * 1.05 - 10);
+                System.out.println("Dades modificades: saldo actualitzat");
+            };
 
         // Tasca 3: Llegir dades modificades i retornar resultat final
         Callable<String> resultTask = () -> {
